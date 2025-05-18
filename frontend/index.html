@@ -1,44 +1,48 @@
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./dist/styles/style.css">
-    <title>Jacob Smith RepoHub</title>
-  </head>
-  <body>
-    <div id="wrapper">
-     <header>
-       <h3>
-         Jacob Smith  
-       </h3>
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <link rel="stylesheet" href="./dist/styles/style.css" />
+  <title>Jacob Smith RepoHub</title>
+</head>
+<body>
+  <!-- Sidebar -->
+  <header>
+    <h3 id="sidebar-toggle">Jacob Smith</h3>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Recruiters</a></li>
+        <li><a href="#">Clients</a></li>
+        <li><a href="#">Readers</a></li>
+        <li><a href="#">RepoHub</a></li>
+      </ul>
+    </nav>
+  </header>
 
-       <nav>
-         <ul>
-           <li><a href="#">Home</a></li>
-           <li><a href="#">About</a></li>
-           <li><a href="#">My_RepoHub</a></li>
-           <li><a href="#">Contact</a></li>
-         </ul>
-       </nav>
-     </header>
+  <!-- Main shifted right by sidebar width -->
+  <div id="main-wrapper">
+    <main>
+      <!-- background overlay -->
+      <div class="darkenBG"></div>
 
-     <main>
-      <div class="darkenBG"> 
-        <div class="meInfo">
-          <h1>
-            Jacob Smith
-          </h1>
-          <div id="titles">
-            <span>Web Developer</span> | 
-            <span>Software Engineer</span> |
-            <span>Student</span>
-          </div>
+      <!-- actual content -->
+      <div class="content">
+        <h1>Jacob Smith</h1>
+        <div id="titles">
+          <span>Web Developer</span> |
+          <span>Software Engineer</span> |
+          <span>Student</span>
         </div>
       </div>
+    </main>
+  </div>
 
-     </main>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <script type="module" src="/src/main.ts"></script>
+</body>
 </html>

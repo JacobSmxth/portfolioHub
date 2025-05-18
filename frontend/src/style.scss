@@ -1,8 +1,11 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 
 $main-font: 'Red Hat Display', sans-serif;
 $header-height: 4rem;
-
+$sidebar-width: 12rem;
+$collapsed-width: 0rem;
+$transition-speed: 0.3s;
 
 $sb-size: 0.5rem;
 $sb-track: #000;
@@ -10,37 +13,32 @@ $sb-thumb: #00409940;
 $sb-thumb-hover: #00409970;
 $sb-radius: 0.25rem;
 
-
+// Scrollbar
 ::-webkit-scrollbar {
   width: $sb-size;
   height: $sb-size;
 }
-
 ::-webkit-scrollbar-track {
   background: $sb-track;
 }
-
 ::-webkit-scrollbar-thumb {
   background-color: $sb-thumb;
   border-radius: $sb-radius;
   border: 2px solid #00000060;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: $sb-thumb-hover;
 }
-
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
 
-
+// Reset & Base
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-
 html, body {
   width: 100%;
   height: 100%;
@@ -48,93 +46,133 @@ html, body {
   padding: 0;
   font-family: $main-font;
   background: #000;
+  color: #fefefe;
 }
 
-#wrapper {
-  width: 95%;
-  margin: 0 auto;
-  padding-top: $header-height;
-}
-
+// Sidebar Header
 header {
   position: fixed;
   top: 0;
   left: 0;
-  height: $header-height;
-  width: 100%;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  width: $sidebar-width;
+  height: 100vh;
+  padding: 2rem 1rem;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(0.8rem);
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+
+
 
   h3 {
-    margin: 0;
-    font-size: 1.25rem;
+    position: relative;
+    font-size: 1.5rem;
     color: #fefefe;
+    cursor: pointer;
+    transition: opacity 0.6s ease;
   }
 
-  ul {
-    display: flex;
-    gap: 1rem;
+  nav ul {
+    list-style: none;
     margin: 0;
     padding: 0;
-    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 
     li a {
-      display: block;
+      position: relative;
       padding: 0.5rem 1rem;
       color: #fefefe;
       text-decoration: none;
-      font-size: 0.95rem;
-      transition: background 0.2s;
+      font-size: 1rem;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0;
+        height: 1px;
+        background: white;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+
+      &:hover::after {
+        transform: scaleX(1);
+      }
+
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 0.25rem;
+        background: none;
       }
     }
   }
 }
 
+// Shift everything right of the sidebar
+#main-wrapper {
+  margin-left: $sidebar-width;
+  width: calc(100% - #{$sidebar-width});
+  transition: margin-left $transition-speed ease, width $transition-speed ease;
+}
+
+// Main content & background
 main {
-  width: 100%;
   position: relative;
-  min-height: calc(100vh - #{$header-height});
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
   background:
-    url('../../public/bg.jpeg') center/cover no-repeat,
+    url('/bg.jpeg') center/cover no-repeat,
     #333;
-  color: #fefefe;
   text-align: center;
 
   .darkenBG {
     position: absolute;
-    inset: 0; // top/right/bottom/left: 0
+    inset: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 1;
   }
 
-  .meInfo {
+  .content {
     position: relative;
     z-index: 2;
-    margin-top: 2rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
 
-  h1 {
-    margin: 0.5rem 0;
-    font-size: clamp(2rem, 8vw, 5rem);
+    h1 {
+      margin: 0.5rem 0;
+      font-size: clamp(2rem, 8vw, 5rem);
+    }
+    #titles {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      margin-bottom: 1rem;
+    }
   }
+}
 
-  #titles {
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    margin-bottom: 1rem;
+body.sidebar-collapsed {
+  header {
+    width: $collapsed-width;
+
+    h3 {
+      position: relative;
+      left: 2rem;
+    }
+
+    nav ul {
+      opacity: 0;
+    }
+  }
+  #main-wrapper {
+    margin-left: $collapsed-width;
+    width: calc(100% - #{$collapsed-width})
   }
 }
 

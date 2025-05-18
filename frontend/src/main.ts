@@ -1,19 +1,30 @@
+// Imports here
+
 import './style.scss';
 
+// DOM Elements
 
-const BASE_URL = 'http://localhost:3000';
-
-const fetchRepos = async () => {
-  const response = await fetch(`${BASE_URL}/api/repos`)
-  const data = await response.json();
-  return data;
-}
+const sideToggle = document.getElementById('sidebar-toggle');
 
 
-const fetchRepoCommits = async (repoThing: string) => {
-  const response = await fetch(`${BASE_URL}/api/repos/${repoThing}/commits`);
-  const commits = await response.json();
-  return commits;
-}
+// Event Listeners
 
+sideToggle.addEventListener('click', () => {
+  sideToggle.style.opacity = '0';
+});
 
+sideToggle.addEventListener('transitionend', (evt) => {
+  if (evt.propertyName !== 'opacity') return;
+
+  if (getComputedStyle(sideToggle).opacity === '0') {
+    sideToggle.innerText =
+      sideToggle.innerText === 'Jacob Smith' ? 'JS' : 'Jacob Smith';
+
+    document.body.classList.toggle('sidebar-collapsed');
+
+    requestAnimationFrame(() => {
+      sideToggle.style.opacity = '1';
+    });
+  }
+});
+  
