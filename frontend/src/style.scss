@@ -1,19 +1,32 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 
-$main-font: 'Red Hat Display', sans-serif;
-$header-height: 4rem;
-$sidebar-width: 12rem;
+// ──────────────────────────────
+// Design Tokens & Globals
+// ──────────────────────────────
+$main-font:       'Red Hat Display', sans-serif;
+$header-height:   4rem;
+$sidebar-width:   12rem;
 $collapsed-width: 0rem;
 $transition-speed: 0.3s;
 
-$sb-size: 0.5rem;
-$sb-track: #000;
-$sb-thumb: #00409940;
-$sb-thumb-hover: #00409970;
-$sb-radius: 0.25rem;
+// Dark‑mode palette
+$bg:             #0d1117;       // page background
+$surface:        #161b22;       // card & panel background
+$accent:         #58a6ff;       // links, highlights
+$accent-hover:   #1f6feb;       // hover state
+$text-primary:   #c9d1d9;       // main text
+$text-muted:     #8b949e;       // secondary text
+$border-color:   #30363d;       // subtle borders
+$shadow:         0 4px 6px rgba(0, 0, 0, 0.5);
+$shadow-hover:   0 8px 16px rgba(0, 0, 0, 0.7);
 
-// Scrollbar
+// Scrollbar styling
+$sb-size:       0.5rem;
+$sb-track:      #000;
+$sb-thumb:      #00409940;
+$sb-thumb-hover:#00409970;
+$sb-radius:     0.25rem;
+
 ::-webkit-scrollbar {
   width: $sb-size;
   height: $sb-size;
@@ -24,7 +37,7 @@ $sb-radius: 0.25rem;
 ::-webkit-scrollbar-thumb {
   background-color: $sb-thumb;
   border-radius: $sb-radius;
-  border: 2px solid #00000060;
+  border: 2px solid rgba(0, 0, 0, 0.375);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: $sb-thumb-hover;
@@ -33,7 +46,9 @@ $sb-radius: 0.25rem;
   background: transparent;
 }
 
+// ──────────────────────────────
 // Reset & Base
+// ──────────────────────────────
 *,
 *::before,
 *::after {
@@ -45,11 +60,24 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: $main-font;
-  background: #000;
-  color: #fefefe;
+  background: $bg;
+  color: $text-primary;
+  scroll-behavior: smooth;
 }
 
+// Links
+a {
+  color: $accent;
+  transition: color 0.2s ease;
+  &:hover {
+    color: $accent-hover;
+    text-decoration: underline;
+  }
+}
+
+// ──────────────────────────────
 // Sidebar Header
+// ──────────────────────────────
 header {
   position: fixed;
   top: 0;
@@ -57,21 +85,16 @@ header {
   width: $sidebar-width;
   height: 100vh;
   padding: 2rem 1rem;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(0.8rem);
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(8px);
   z-index: 100;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
-
-
-
 
   h3 {
-    position: relative;
     font-size: 1.5rem;
-    color: #fefefe;
+    color: $text-primary;
     cursor: pointer;
     transition: opacity 0.6s ease;
   }
@@ -80,7 +103,7 @@ header {
     list-style: none;
     margin: 0;
     padding: 0;
-    width: 100%;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -88,7 +111,7 @@ header {
     li a {
       position: relative;
       padding: 0.5rem 1rem;
-      color: #fefefe;
+      color: $text-primary;
       text-decoration: none;
       font-size: 1rem;
 
@@ -99,7 +122,7 @@ header {
         right: 1rem;
         bottom: 0;
         height: 1px;
-        background: white;
+        background: $accent-hover;
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.4s ease;
@@ -108,95 +131,161 @@ header {
       &:hover::after {
         transform: scaleX(1);
       }
-
       &:hover {
         background: none;
+        text-decoration: none;
       }
     }
   }
 }
 
-// Shift everything right of the sidebar
+// Collapse toggle
+body.sidebar-collapsed {
+  header {
+    width: $collapsed-width;
+    background: none;
+    backdrop-filter: none;
+    h3 {
+      left: 2rem;
+    }
+    nav ul {
+      display: none;
+    }
+  }
+  #main-wrapper {
+    margin-left: $collapsed-width;
+    width: calc(100% - #{$collapsed-width});
+  }
+}
+
+// ──────────────────────────────
+// Main Wrapper Shift
+// ──────────────────────────────
 #main-wrapper {
   margin-left: $sidebar-width;
   width: calc(100% - #{$sidebar-width});
   transition: margin-left $transition-speed ease, width $transition-speed ease;
 }
 
-// Main content & background
-main {
-  section.hero {
+// ──────────────────────────────
+// Hero Section
+// ──────────────────────────────
+main section.hero {
+  position: relative;
+  min-height: 100vh;
+  background: url('/bg.jpeg') center/cover no-repeat, $surface;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .darkenBG {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 17, 23, 0.7);
+    z-index: 1;
+  }
+
+  .content {
     position: relative;
-    min-height: 100vh;
-    background: url('/bg.jpeg') center/cover no-repeat, #333;
+    z-index: 2;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h1 {
+      margin: 0.5rem 0;
+      font-size: clamp(2rem, 8vw, 5rem);
+    }
+
+    #titles {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      margin-bottom: 1rem;
+    }
+
+    .tagline {
+      max-width: 600px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      color: $text-muted;
+    }
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: $text-primary;
+    animation: bounce 3s infinite;
+  }
+}
+
+// ──────────────────────────────
+// Repo Section & Cards
+// ──────────────────────────────
+#repo-section {
+  padding: 4rem 2rem;
+  background: $bg;
+
+  h2 {
     text-align: center;
-
-    .darkenBG {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1;
-    }
-
-    .content {
-      position: relative;
-      z-index: 2;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      h1 { 
-        margin: 0.5rem 0; 
-        font-size: clamp(2rem, 8vw, 5rem);
-      }
-
-      #titles {
-        font-size: clamp(1rem, 3vw, 1.3rem);
-        margin-bottom: 1rem;
-      }
-
-      .tagline {
-        max-width: 600px;
-        margin: 0 auto 2rem;
-        font-size: 1.1rem;
-      }
-    }
-
-    .scroll-indicator {
-      color: #fff;
-      position: absolute;
-      bottom: 1rem;
-      left: 50%;
-      font-size: 2rem;
-      transform: translateX(-50%);
-      animation: bounce 3s infinite;
-    }
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    color: $text-primary;
   }
 }
 
-body.sidebar-collapsed {
-  header {
-    width: $collapsed-width;
+#repo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
 
-    h3 {
-      position: relative;
-      left: 2rem;
-    }
+.repo-card {
+  background: $surface;
+  border-left: 4px solid $accent;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: $shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    nav ul {
-      opacity: 0;
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
+
+    a {
+      color: $accent;
+      text-decoration: none;
     }
   }
-  #main-wrapper {
-    margin-left: $collapsed-width;
-    width: calc(100% - #{$collapsed-width})
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: $text-muted;
+    min-height: 3rem; // forces uniform card heights
+  }
+
+  .meta {
+    font-size: 0.85rem;
+    color: $text-muted;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-hover;
   }
 }
 
-
+// ──────────────────────────────
+// Animations
+// ──────────────────────────────
 @keyframes bounce {
-  0% {transform: translateY(0rem)}
-  50% {transform: translateY(1rem)}
-  100% {transform: translateY(0rem)}
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(1rem); }
 }
+
